@@ -1,1 +1,249 @@
 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Messenger</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: Arial, sans-serif;
+    }
+
+    body {
+      background: #f0f2f5;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .app {
+      width: 100%;
+      max-width: 500px;
+      height: 100vh;
+      max-height: 850px;
+      background: white;
+      display: flex;
+      flex-direction: column;
+    }
+
+    header {
+      padding: 18px;
+      background: #1877f2;
+      color: white;
+      font-size: 24px;
+      font-weight: bold;
+    }
+
+    .login {
+      padding: 25px;
+      margin: auto;
+      width: 90%;
+    }
+
+    input {
+      width: 100%;
+      padding: 14px;
+      margin: 8px 0;
+      border: 1px solid #ddd;
+      border-radius: 10px;
+      font-size: 16px;
+    }
+
+    button {
+      width: 100%;
+      padding: 14px;
+      margin-top: 10px;
+      border: none;
+      border-radius: 10px;
+      background: #1877f2;
+      color: white;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .chat {
+      display: none;
+      flex-direction: column;
+      height: 100%;
+    }
+
+    .welcome {
+      padding: 25px;
+      text-align: center;
+      color: #555;
+    }
+
+    .logout {
+      background: #e4e6eb;
+      color: #222;
+      margin: 15px;
+      width: calc(100% - 30px);
+    }
+
+    #status {
+      text-align: center;
+      padding: 10px;
+      color: #555;
+      font-size: 14px;
+    }
+  </style>
+</head>
+
+<body>
+
+<div class="app">
+
+  <header>💬 Messenger</header>
+
+  <!-- LOGIN -->
+  <div class="login" id="loginBox">
+    <h2>Welcome to Messenger</h2>
+
+    <input id="email" type="email" placeholder="Email">
+    <input id="password" type="password" placeholder="Password">
+
+    <button onclick="signup()">Create Account</button>
+    <button onclick="login()">Login</button>
+
+    <p id="status"></p>
+  </div>
+
+  <!-- CHAT -->
+  <div class="chat" id="chatBox">
+
+    <div class="welcome">
+      <h2>Welcome 👋</h2>
+      <p>You are logged in.</p>
+      <br>
+      <p>Private chat & group chat coming next.</p>
+    </div>
+
+    <button class="logout" onclick="logout()">Logout</button>
+
+  </div>
+
+</div>
+
+
+<script type="module">
+
+  import { initializeApp } from
+  "https://www.gstatic.com/firebasejs/12.5.0/firebase-app.js";
+
+  import {
+    getAuth,
+    createUserWithEmailAndPassword,
+    signInWithEmailAndPassword,
+    signOut,
+    onAuthStateChanged
+  } from
+  "https://www.gstatic.com/firebasejs/12.5.0/firebase-auth.js";
+
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyB8Z2m6Rse_xT6OrecNLVTEBOwUFik-yaM",
+    authDomain: "messenger-abbd5.firebaseapp.com",
+    projectId: "messenger-abbd5",
+    storageBucket: "messenger-abbd5.firebasestorage.app",
+    messagingSenderId: "789344253599",
+    appId: "1:789344253599:web:f1f135c477bc4a2f6c94aa"
+  };
+
+
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+
+
+  window.signup = async function () {
+
+    const email =
+      document.getElementById("email").value;
+
+    const password =
+      document.getElementById("password").value;
+
+    try {
+
+      await createUserWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
+
+      document.getElementById("status").innerText =
+        "Account created successfully!";
+
+    } catch (error) {
+
+      document.getElementById("status").innerText =
+        error.message;
+
+    }
+  };
+
+
+  window.login = async function () {
+
+    const email =
+      document.getElementById("email").value;
+
+    const password =
+      document.getElementById("password").value;
+
+    try {
+
+      await signInWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
+
+    } catch (error) {
+
+      document.getElementById("status").innerText =
+        error.message;
+
+    }
+  };
+
+
+  window.logout = async function () {
+
+    await signOut(auth);
+
+  };
+
+
+  onAuthStateChanged(auth, (user) => {
+
+    if (user) {
+
+      document.getElementById("loginBox").style.display =
+        "none";
+
+      document.getElementById("chatBox").style.display =
+        "flex";
+
+    } else {
+
+      document.getElementById("loginBox").style.display =
+        "block";
+
+      document.getElementById("chatBox").style.display =
+        "none";
+
+    }
+
+  });
+
+</script>
+
+</body>
+</html>
